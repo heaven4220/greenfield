@@ -19,8 +19,23 @@
 2. **SQL Editor** → `supabase/schema.sql` 전체 실행
 3. **Project Settings → API Keys** → Project URL + 공개 키(`anon` / `publishable`) 복사
 4. `config.js` 에 두 값 입력
-5. GitHub 저장소(Public)에 파일 전체 업로드 → **Settings → Pages → Deploy from a branch → main / (root)**
-6. 1~2분 뒤 `https://<아이디>.github.io/<저장소>/` → 폰에서 **홈 화면에 추가**
+5. GitHub 저장소(Public)에 파일 전체 업로드
+6. **Settings → Pages → Source** 선택 — 둘 중 하나로만 통일합니다.
+   - `GitHub Actions` → 포함된 `.github/workflows/pages.yml`이 배포 (권장)
+   - `Deploy from a branch → main / (root)` → 이 경우 `.github/workflows/pages.yml`은 삭제
+7. **Supabase → Authentication → URL Configuration**
+   - Site URL: `https://<아이디>.github.io/<저장소>/`
+   - Redirect URLs에도 같은 주소 추가 (안 하면 인증 메일 링크가 localhost로 갑니다)
+8. 1~2분 뒤 `https://<아이디>.github.io/<저장소>/` → 폰에서 **홈 화면에 추가**
+
+## 문제 해결
+
+| 증상 | 원인 / 조치 |
+|---|---|
+| `Invalid path specified in request URL` | `config.js`의 `url`에 경로가 붙어 있음. 호스트만 남기세요 (`https://xxxx.supabase.co`) |
+| `Invalid API key` | `key`가 anon/publishable 키가 아니거나 잘린 상태 |
+| 인증 메일 링크가 localhost로 감 | Supabase → Authentication → URL Configuration의 Site URL 미설정 |
+| config.js를 고쳤는데 폰에서 그대로 | 서비스워커 캐시. 홈 화면 아이콘 삭제 후 재설치하거나 브라우저에서 새로고침 (v3부터 config.js는 캐시하지 않습니다) |
 
 > `service_role` / `secret` 키는 절대 넣지 마세요. 앱에는 공개 키만 들어갑니다.
 
