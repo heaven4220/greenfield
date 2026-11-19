@@ -24,7 +24,10 @@ create table if not exists public.gf_profiles (
 create sequence if not exists public.gf_member_seq start 101;
 
 create or replace function public.gf_issue_member_no() returns trigger
-language plpgsql as $$
+language plpgsql
+security definer
+set search_path = public, pg_temp
+as $$
 begin
   if new.member_no is null then
     new.member_no := 'G' || to_char(now(),'YY') || '-' ||

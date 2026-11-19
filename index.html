@@ -586,6 +586,9 @@ function authMsg(m){
   if(s.includes('invalid path')) return 'Supabase 주소가 잘못되었습니다. config.js 의 url 을 경로 없이 «https://<프로젝트ref>.supabase.co» 로만 넣어 주세요.';
   if(s.includes('invalid api key')||s.includes('no api key')) return '공개 키(anon/publishable)가 올바르지 않습니다. config.js 의 key 를 다시 확인해 주세요.';
   if(s.includes('failed to fetch')) return '서버에 연결하지 못했습니다. Supabase 주소와 네트워크를 확인해 주세요.';
+  if(s.includes('permission denied for sequence')) return '회원번호 발급 권한이 없습니다. DB에서 gf_issue_member_no 함수를 SECURITY DEFINER로 바꿔야 합니다.';
+  if(s.includes('permission denied')) return '데이터 접근 권한이 없습니다. DB 권한 설정을 확인해 주세요. ('+m+')';
+  if(s.includes('duplicate key')||s.includes('already exists')) return '이미 프로필이 등록되어 있습니다. 앱을 새로고침해 주세요.';
   return m || '오류가 발생했습니다.';
 }
 async function doAuth(){
@@ -629,11 +632,16 @@ async function createProfile(){
   if(name.length<2){ A.err='이름을 2자 이상 입력해 주세요.'; render(); return; }
   if(!(hcp>=0 && hcp<=54)){ A.err='핸디는 0~54 사이로 입력해 주세요.'; render(); return; }
   A.busy=true; render();
-  const { error } = await A.sb.from('gf_profiles').insert({ id:A.session.user.id, name, region, hcp });
-  A.busy=false;
-  if(error){ A.err=authMsg(error.message); render(); return; }
-  await loadProfile(); A.tab='home'; render();
-  toast('회원번호가 발급되었습니다. 확정 5라운드 전까지는 루키입니다.');
+  let ok=false;
+  try{
+    const { error } = await A.sb.from('gf_profiles').insert({ id:A.session.user.id, name, region, hcp });
+    if(error) throw error;
+    await loadProfile();
+    if(!A.profile) throw new Error('프로필은 저장됐지만 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.');
+    A.tab='home'; ok=true;
+  }catch(e){ A.err=authMsg(e&&e.message?e.message:String(e)); }
+  A.busy=false; render();
+  if(ok) toast('회원번호가 발급되었습니다. 확정 5라운드 전까지는 루키입니다.');
 }
 async function logout(){
   await A.sb.auth.signOut();
