@@ -1,0 +1,17 @@
+{
+  "name": "GREENFIELD LIVE — 실시간 골프 스코어보드",
+  "short_name": "그린필드",
+  "description": "같은 조 4명의 스코어를 실시간으로 동기화하는 골프 라운드 앱",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0B1F17",
+  "theme_color": "#0B1F17",
+  "lang": "ko",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
