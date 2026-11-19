@@ -538,6 +538,19 @@ const LS = { get(k){ try{return localStorage.getItem(k);}catch(e){return null;} 
 const $ = (s,r=document)=>r.querySelector(s);
 const fmt = n => (Math.round(Number(n)*10)/10).toFixed(1);
 const GT = { A:'~10', B:'11–18', C:'19–27', D:'28~' };
+/* 지역: 베트남 거주 한인 대상. 권역별로 묶어 표시합니다. */
+const REGIONS = [
+  ['북부', ['하노이','박닌','흥옌','하이퐁','하이즈엉','빈푹','타이응우옌','꽝닌']],
+  ['중부', ['다낭','꽝남','냐짱(칸호아)']],
+  ['남부', ['호치민','빈즈엉','동나이','롱안','붕따우']],
+  ['',     ['기타']]
+];
+function regionOptions(sel){
+  return REGIONS.map(([g,rs])=>{
+    const opts = rs.map(r=>`<option${r===sel?' selected':''}>${r}</option>`).join('');
+    return g ? `<optgroup label="${g}">${opts}</optgroup>` : opts;
+  }).join('');
+}
 
 function gradeOf(h){ const n=Math.round(Number(h)); return n<=10?'A':n<=18?'B':n<=27?'C':'D'; }
 function nextGradeInfo(h){
@@ -881,7 +894,7 @@ function viewOnboard(){
     <p class="step-sub">이름과 신고 핸디로 회원번호가 자동 발급됩니다. 확정 5라운드 전까지는 루키 보드에만 표시됩니다.</p>
     <label class="fld"><span>이름</span><input id="o-name" value="" placeholder="실명" autocomplete="name"></label>
     <label class="fld"><span>지역</span>
-      <select id="o-region">${['서울','경기','인천','부산','대전','대구','광주','강원','제주','충북','경남','전북'].map(r=>`<option>${r}</option>`).join('')}</select>
+      <select id="o-region">${regionOptions()}</select>
     </label>
     <label class="fld"><span>신고 핸디 (0~54)</span><input id="o-hcp" type="number" step="0.1" value="27" inputmode="decimal"></label>
     <div class="err ${A.err?'on':''}">${A.err||''}</div>
