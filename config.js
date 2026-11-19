@@ -6,6 +6,6 @@
    비워두면 앱은 '로컬 데모'로 실행됩니다.
    ============================================================ */
 window.GF_CONFIG = {
-  url: 'https://oikfycmgymlsvbhhwgpo.supabase.co/rest/v1/',
+  url: 'https://oikfycmgymlsvbhhwgpo.supabase.co',
   key: 'sb_publishable_A97ZLP3X-UktI4RKRZNzVg_NWtSAc6d'
 };
